@@ -1,82 +1,96 @@
-import java.util.Scanner;
-import java.util.ArrayList;
+import java.util.*;
+
 public class Manbo {
-    private static class Task {
-        private boolean isDone;
-        private String description;
+    static String logo = " __  __    _    _   _ ____   ___   \n"
+            + "|  \\/  |  / \\  | \\ | | __ ) / _ \\  \n"
+            + "| |\\/| | / _ \\ |  \\| |  _ \\| | | | \n"
+            + "| |  | |/ ___ \\| |\\  | |_) | |_| | \n"
+            + "|_|  |_/_/   \\_\\_| \\_|____/ \\___/  \n";
 
-        public Task(String description){
-            this.description = description;
-            this.isDone = false;
-        }
-        public void markAsDone(){
-            this.isDone = true;
-        }
-
-        public void unmarkAsDone(){
-            this.isDone = false;
-        }
-
-        public String getStatusIcon() {
-            return (isDone?"X": " ");
-        }
-        @Override
-        public String toString() {
-            return "[" + getStatusIcon() + "] " + description;
-        }
-    }
+    private static final Scanner in = new Scanner(System.in);
+    private static final List<Task> tasks = new ArrayList<>();
 
     public static void main(String[] args) {
-        Scanner in= new Scanner(System.in);
-       // Task[] tasks= new Task[100];
-        ArrayList<Task> tasks = new ArrayList<>();
-        int taskCount= 0;
-        String logo = " __  __    _    _   _ ____   ___   \n"
-                + "|  \\/  |  / \\  | \\ | | __ ) / _ \\  \n"
-                + "| |\\/| | / _ \\ |  \\| |  _ \\| | | | \n"
-                + "| |  | |/ ___ \\| |\\  | |_) | |_| | \n"
-                + "|_|  |_/_/   \\_\\_| \\_|____/ \\___/  \n";
-        System.out.println("____________________________________________________________");
+        printWelcome();
+
+        while (true) {
+            String input = in.nextLine();
+            if (input.equals("bye")) {
+                printWithBorder("Bye. Hope to see you again soon!");
+                break;
+            } else if (input.equals("list")) {
+                printList();
+            } else if (input.startsWith("mark ")) {
+                markTask(input);
+            } else if (input.startsWith("unmark ")) {
+                unmarkTask(input);
+            } else if (input.startsWith("todo ")) {
+                addTodo(input);
+            } else if (input.startsWith("deadline ")) {
+                addDeadline(input);
+            } else if (input.startsWith("event ")) {
+                addEvent(input);
+            } else {
+                printWithBorder("Unknown command.");
+            }
+        }
+
+        in.close();
+    }
+
+    private static void printWelcome() {
         System.out.println(logo);
+        System.out.println("____________________________________________________________");
         System.out.println(" Hello! I'm Manbo");
         System.out.println(" What can I do for you?");
         System.out.println("____________________________________________________________");
-
-
-        while (true) {
-            String input= in.nextLine();
-            if (input.equals("bye")) {
-                System.out.println("____________________________________________________________");
-                System.out.println(" Bye. Hope to see you again soon!");
-                System.out.println("____________________________________________________________");
-                break;
-            } else if (input.equals("list")) {
-                System.out.println(" Here are the tasks in your list:");
-                for (int i = 0; i < tasks.size(); i++) {
-                    System.out.println(" " + (i + 1) + "." + tasks.get(i));// arraylist supports get
-                }
-
-            System.out.println("____________________________________________________________");
-            } else if (input.startsWith("mark ")) //记得空格
-            {
-                int index= Integer.parseInt(input.substring(5)) - 1;//convert str to int
-                tasks.get(index).markAsDone();
-                System.out.println("Nice! I've marked this task as done:");
-                System.out.println("   " + tasks.get(index));
-            } else if (input.startsWith("unmark ")) {
-                int index = Integer.parseInt(input.substring(7)) - 1;
-                tasks.get(index).unmarkAsDone();
-                System.out.println(" OK, I've marked this task as not done yet:");
-                System.out.println("   " + tasks.get(index));
-            } else {
-                Task t = new Task(input);
-                tasks.add(t);
-            System.out.println("____________________________________________________________");
-            System.out.println(" added: " + input);
-            System.out.println("____________________________________________________________");
-        }
     }
 
-        in.close();
+    private static void printWithBorder(String msg) {
+        System.out.println("____________________________________________________________");
+        System.out.println(" " + msg);
+        System.out.println("____________________________________________________________");
+    }
+
+    private static void printList() {
+        System.out.println("____________________________________________________________");
+        System.out.println(" Here are the tasks in your list:");
+        for (int i =0; i < tasks.size(); i++) {
+            System.out.println(" " + (i + 1) + "." + tasks.get(i));
+        }
+        System.out.println("____________________________________________________________");
+    }
+
+    private static void markTask(String input) {
+        int index = Integer.parseInt(input.substring(5)) - 1;
+        tasks.get(index).markAsDone();
+        printWithBorder("Nice! I've marked this task as done:\n" + tasks.get(index));
+    }
+
+    private static void unmarkTask(String input) {
+        int index = Integer.parseInt(input.substring(7))- 1;
+        tasks.get(index).unmarkAsDone();
+        printWithBorder("OK, I've marked this task as not done yet:\n"+tasks.get(index));
+    }
+
+    private static void addTodo(String input) {
+        String description = input.substring(5);
+        Task t = new Todo(description);
+        tasks.add(t);
+        printWithBorder("Got it. I've added this task:\n" + t + "\n Now you have " + tasks.size() + " tasks in the list.");
+    }
+
+    private static void addDeadline(String input) {
+        String[] parts = input.substring(9).split(" /by ");// first part before by second after by
+        Task t = new Deadline(parts[0], parts[1]);
+        tasks.add(t);
+        printWithBorder("Got it. I've added this task:\n   " + t + "\n Now you have " + tasks.size() + " tasks in the list.");
+    }
+
+    private static void addEvent(String input) {
+        String[] parts = input.substring(6).split(" /from | /to ");
+        Task t = new Event(parts[0], parts[1], parts[2]);
+        tasks.add(t);
+        printWithBorder("Got it. I've added this task:\n   " + t + "\n Now you have " + tasks.size() + " tasks in the list.");
     }
 }
