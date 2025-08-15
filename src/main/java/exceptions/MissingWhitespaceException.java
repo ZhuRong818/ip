@@ -1,4 +1,7 @@
 package exceptions;
 
-public class MissingWhitespaceException {
+public class MissingWhitespaceException extends ManboException {
+    public MissingWhitespaceException(String message) {
+        super(message);
+    }
 }
