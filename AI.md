@@ -8,3 +8,5 @@ it can be used to test error handling. I also used
 it to generate some test scripts for error handling
 .
 for level 5, gpt suggest me to use trim method to remove the redundant whitespace that can cause unexpected behaviour in error handling 
+
+used chatgpt to format the code cleanly

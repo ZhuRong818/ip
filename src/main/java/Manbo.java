@@ -12,7 +12,7 @@ public class Manbo {
             + "|  \\/  |  / \\  | \\ | | __ ) / _ \\  \n"
             + "| |\\/| | / _ \\ |  \\| |  _ \\| | | | \n"
             + "| |  | |/ ___ \\| |\\  | |_) | |_| | \n"
-            + "|_|  |_/_/   \\_\\_| \\_|____/ \\___/  \n";
+            + "|_|  |_/_/   \\_\\_| \\_|____/ \\___/  \n";// log is AI generated
 
     private static final Scanner in = new Scanner(System.in);
     private static final List<Task> tasks = new ArrayList<>();
@@ -36,10 +36,10 @@ public class Manbo {
 
                 if (input.startsWith("mark")) {
                     checkWhitespaceAfterCommand(input, "mark");//  should be  mark 1 not mark1
-                    markTask(input);
+                    mark(input);
                 } else if (input.startsWith("unmark")) {
                     checkWhitespaceAfterCommand(input, "unmark");
-                    unmarkTask(input);
+                    unmark(input);
                 } else if (input.startsWith("todo")) {
                     checkWhitespaceAfterCommand(input, "todo");
                     addTodo(input);
@@ -51,7 +51,7 @@ public class Manbo {
                     addEvent(input);
                 } else if (input.startsWith("delete")) {
                     checkWhitespaceAfterCommand(input, "delete");
-                    deleteTask(input);
+                    delete(input);
                 } else {
                     throw new UnrecognisedInputException(input);// we only support a few inputs currently
                 }
@@ -79,7 +79,7 @@ public class Manbo {
         System.out.println(" What can I do for you?");
         System.out.println("____________________________________________________________");
     }
-
+// this method is AI generated
     private static void printWithBorder(String msg) {
         System.out.println("____________________________________________________________");
         System.out.println(" " + msg);
@@ -106,7 +106,7 @@ public class Manbo {
         return index;
     }
 
-    private static void markTask(String input) throws ManboException {
+    private static void mark(String input) throws ManboException {
         try {
             if (input.length() < 5) {// brutal force, but cannot think of better solution for now
                 throw new EmptyDescriptionException("mark");
@@ -124,7 +124,7 @@ public class Manbo {
         }
     }
 
-    private static void unmarkTask(String input) throws ManboException {
+    private static void unmark(String input) throws ManboException {
         try {
             if (input.length() < 7) {
                 throw new EmptyDescriptionException("unmark");
@@ -147,8 +147,8 @@ public class Manbo {
             throw new EmptyDescriptionException("todo");
 
         }
-        String description = input.substring(5).trim();
-        Task t = new Todo(description);
+        String detail = input.substring(5).trim();
+        Task t = new Todo(detail);
         tasks.add(t);
         printWithBorder("Got it. I've added this task:\n" + t + "\n Now you have "
                 + tasks.size() + " tasks in the list.");
@@ -184,7 +184,7 @@ public class Manbo {
                 + tasks.size() + " tasks in the list.");
     }
 
-    private static void deleteTask(String input) throws ManboException {
+    private static void delete(String input) throws ManboException {
 
         try {
             int index = parseIndex(input, 7);
@@ -194,7 +194,7 @@ public class Manbo {
         } catch (NumberFormatException e) {
             throw new InvalidIndexException(input.substring(6).trim());
         } catch (IndexOutOfBoundsException e) {
-            throw new IndexOutOfRangeException(-1, tasks.size()); // -1 means invalid internal index
+            throw new IndexOutOfRangeException(-1, tasks.size()); // -1 means
         }
     }
 
