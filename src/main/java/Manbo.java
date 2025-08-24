@@ -8,6 +8,8 @@ import exceptions.EmptyDescriptionException;
 
 
 public class Manbo {
+    private static final Storage storage = new Storage("data/manbo.txt");
+
     static String logo = " __  __    _    _   _ ____   ___   \n"
             + "|  \\/  |  / \\  | \\ | | __ ) / _ \\  \n"
             + "| |\\/| | / _ \\ |  \\| |  _ \\| | | | \n"
@@ -19,6 +21,8 @@ public class Manbo {
 
     public static void main(String[] args) {
         printWelcome();
+        tasks.addAll(storage.load());
+
 
         while (true) {
             try {
@@ -118,6 +122,7 @@ public class Manbo {
                 throw new IndexOutOfRangeException(index + 1, tasks.size());
             }
             tasks.get(index).markAsDone();
+            storage.save(tasks);
             printWithBorder("Nice! I've marked this task as done:\n" + tasks.get(index));
         } catch (NumberFormatException e) {
             throw new InvalidIndexException(input.substring(4).trim());
@@ -136,6 +141,7 @@ public class Manbo {
                 throw new IndexOutOfRangeException(index + 1, tasks.size());
             }
             tasks.get(index).unmarkAsDone();
+            storage.save(tasks);
             printWithBorder("OK, I've marked this task as not done yet:\n" + tasks.get(index));
         } catch (NumberFormatException e) {
             throw new InvalidIndexException(input.substring(7).trim());
@@ -150,6 +156,7 @@ public class Manbo {
         String detail = input.substring(5).trim();
         Task t = new Todo(detail);
         tasks.add(t);
+        storage.save(tasks);
         printWithBorder("Got it. I've added this task:\n" + t + "\n Now you have "
                 + tasks.size() + " tasks in the list.");
     }
@@ -165,6 +172,7 @@ public class Manbo {
         }//without this input like deadline 1 will break
         Task t = new Deadline(seperate[0].trim(), seperate[1].trim());
         tasks.add(t);
+        storage.save(tasks);
         printWithBorder("Got it. I've added this task:\n   " + t + "\n Now you have "
                 + tasks.size() + " tasks in the list.");
     }
@@ -180,6 +188,7 @@ public class Manbo {
         }
         Task t = new Event(seperate[0].trim(), seperate[1].trim(), seperate[2].trim());
         tasks.add(t);
+        storage.save(tasks);
         printWithBorder("Got it. I've added this task:\n   " + t + "\n Now you have "
                 + tasks.size() + " tasks in the list.");
     }
@@ -189,6 +198,7 @@ public class Manbo {
         try {
             int index = parseIndex(input, 7);
             Task removed = tasks.remove(index);
+            storage.save(tasks);
             printWithBorder("Noted. I've removed this task:\n  " + removed +
                     "\n Now you have " + tasks.size() + " tasks in the list.");
         } catch (NumberFormatException e) {
