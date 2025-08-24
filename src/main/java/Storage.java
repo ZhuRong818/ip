@@ -40,14 +40,14 @@ public class Storage {
     public List<Task> load() {
         List<Task> tasks = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+           String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();// its better to trim as we nvr know if there will be problematic lines
+                if (line.isEmpty()) {
+                    continue;
+                }
 
-
-            String line;
-            while ((reader.readLine()) != null) {
-
-                if (reader.readLine().isEmpty()) continue;
-
-                Task task = TaskParser.parseTask(reader.readLine());
+                Task task = TaskParser.parseTask(line);
                 if (task != null) {
                     tasks.add(task);
                 }
