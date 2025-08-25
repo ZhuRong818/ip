@@ -1,4 +1,7 @@
-// this is to parse task from storage to normal display
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class TaskParser {
     public static Task parseTask(String line) {
 
@@ -18,18 +21,22 @@ public class TaskParser {
             ;
             return t;
         } else if (type.equals("D")) {
-            Task d = new Deadline(seperate[2], seperate[3]);
+            LocalDate by = LocalDate.parse(seperate[3]); // ISO yyyy-MM-dd
+            Deadline d = new Deadline(seperate[2], by, isDone);
+
             if (isDone) {
                 d.markAsDone();
             }
-            ;
+
             return d;
         } else if (type.equals("E")) {
-            Task e = new Event(seperate[2], seperate[3], seperate[4]);
+            LocalDateTime from = LocalDateTime.parse(seperate[3]);
+            LocalDateTime to   = LocalDateTime.parse(seperate[4]);
+            Event e = new Event(seperate[2], from, to, isDone);
+
             if (isDone) {
                 e.markAsDone();
-            }
-            ;
+            };
             return e;
         } else {
             return null;

@@ -5,10 +5,15 @@ import exceptions.InvalidIndexException;
 import exceptions.IndexOutOfRangeException;
 import exceptions.MissingWhitespaceException;
 import exceptions.EmptyDescriptionException;
-
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 public class Manbo {
     private static final Storage storage = new Storage("data/manbo.txt");
+    private static final DateTimeFormatter IN_DATE = DateTimeFormatter.ISO_LOCAL_DATE;  // yyyy-MM-dd
+    private static final DateTimeFormatter IN_DT   = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"); // yyyy-MM-dd HHmm
 
     static String logo = " __  __    _    _   _ ____   ___   \n"
             + "|  \\/  |  / \\  | \\ | | __ ) / _ \\  \n"
@@ -83,7 +88,7 @@ public class Manbo {
         System.out.println(" What can I do for you?");
         System.out.println("____________________________________________________________");
     }
-// this method is AI generated
+    // this method is AI generated
     private static void printWithBorder(String msg) {
         System.out.println("____________________________________________________________");
         System.out.println(" " + msg);
@@ -97,7 +102,7 @@ public class Manbo {
         }
         System.out.println("____________________________________________________________");
     }
-// trim remove whitespace after the str input but doesnot affect the whitespace in the middle
+    // trim remove whitespace after the str input but doesnot affect the whitespace in the middle
     private static int parseIndex(String input, int num) throws ManboException {
         String numberPart = input.substring(num).trim();// use trim to remove white space
         if (!numberPart.matches("\\d+")) {// need to be \\d+ which mean >=1 digit
@@ -162,35 +167,57 @@ public class Manbo {
     }
 
     private static void addDeadline(String input) throws ManboException {
-        if (input.length() <= 9) {
-            throw new EmptyDescriptionException("addDeadline");
+        if (input.length() <= 9) throw new EmptyDescriptionException("deadline");
 
+        String[] parts = input.substring(9).split(" /by ");
+        if (parts.length < 2) throw new ManboException("Please specify the /by date as yyyy-MM-dd.");
+
+        String desc = parts[0].trim();
+        String byStr = parts[1].trim();
+
+        try {
+            LocalDate by = LocalDate.parse(byStr, IN_DATE);
+            Task t = new Deadline(desc, by);
+            tasks.add(t);
+            storage.save(tasks);
+            printWithBorder("Got it. I've added this task:\n   " + t +
+                    "\n Now you have " + tasks.size() + " tasks in the list.");
+        } catch (DateTimeParseException e) {
+            throw new ManboException("Invalid date. Use yyyy-MM-dd (e.g., 2019-12-02).");
         }
-        String[] seperate = input.substring(9).split(" /by ");
-        if (seperate.length < 2) {
-            throw new ManboException("Please specify by date for deadlines.");
-        }//without this input like deadline 1 will break
-        Task t = new Deadline(seperate[0].trim(), seperate[1].trim());
-        tasks.add(t);
-        storage.save(tasks);
-        printWithBorder("Got it. I've added this task:\n   " + t + "\n Now you have "
-                + tasks.size() + " tasks in the list.");
+
     }
 
     private static void addEvent(String input) throws ManboException {
-        if (input.length() <= 6) {
-            throw new EmptyDescriptionException("addEvent");
+        if (input.length() <= 6) throw new EmptyDescriptionException("event");
 
+        // expected: event meeting /from 2019-12-02 1400 /to 1600   OR full datetime for both
+        String[] parts = input.substring(6).split(" /from | /to ");
+        if (parts.length < 3) throw new ManboException("Please specify both /from and /to.");
+
+        String desc = parts[0].trim();
+        String fromStr = parts[1].trim();
+        String toStr   = parts[2].trim();
+
+        try {
+            LocalDateTime from = LocalDateTime.parse(fromStr, IN_DT);
+
+            // If user gave only time for /to, allow smart completion (optional).
+            LocalDateTime to;
+            if (toStr.matches("\\d{4}")) { // e.g., "1600"
+                to = LocalDateTime.parse(fromStr.substring(0, 10) + " " + toStr, IN_DT);
+            } else {
+                to = LocalDateTime.parse(toStr, IN_DT);
+            }
+
+            Task t = new Event(desc, from, to);
+            tasks.add(t);
+            storage.save(tasks);
+            printWithBorder("Got it. I've added this task:\n   " + t +
+                    "\n Now you have " + tasks.size() + " tasks in the list.");
+        } catch (DateTimeParseException e) {
+            throw new ManboException("Invalid date/time. Use yyyy-MM-dd HHmm (e.g., 2019-12-02 1800).");
         }
-        String[] seperate = input.substring(6).split(" /from | /to ");
-        if (seperate.length < 3) {
-            throw new ManboException("Please specify from and to for events.");
-        }
-        Task t = new Event(seperate[0].trim(), seperate[1].trim(), seperate[2].trim());
-        tasks.add(t);
-        storage.save(tasks);
-        printWithBorder("Got it. I've added this task:\n   " + t + "\n Now you have "
-                + tasks.size() + " tasks in the list.");
     }
 
     private static void delete(String input) throws ManboException {
