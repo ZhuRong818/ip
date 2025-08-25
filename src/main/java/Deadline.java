@@ -1,11 +1,14 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 public class Deadline extends Task{
-    private String by;
-    public Deadline(String description, String by) {
+    private final LocalDate by;
+    private static final DateTimeFormatter Output = DateTimeFormatter.ofPattern("MMM d yyyy");
+    public Deadline(String description, LocalDate by) {
         super(description);
         this.by = by;
     }
     //this constructor is for tasks from storage to restore their isdone state
-    public Deadline(String description, String by, boolean isDone) {
+    public Deadline(String description, LocalDate by, boolean isDone) {
         super(description, isDone);
         this.by = by;
     }
@@ -15,6 +18,6 @@ public class Deadline extends Task{
     }
     @Override
     public String toString() {
-        return "[D]" + super.toString() + " (by: " + by + ")";
+        return "[D]" + super.toString() + " (by: " + by.format(Output) + ")";
     }
 }
