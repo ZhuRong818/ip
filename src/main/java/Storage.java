@@ -25,38 +25,32 @@ public class Storage {
         }
     }
 
+    public List<Task> load() {
+        List<Task> tasks = new ArrayList<>();
+        try (Scanner s = new Scanner(file)) {
+            while (s.hasNextLine()) {
+                String line = s.nextLine().trim();
+                if (line.isEmpty()) continue;
+                Task t = TaskParser.parseTask(line);
+                if (t != null) tasks.add(t);
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Error loading file: " + e.getMessage());
+        }
+        return tasks;
+    }
+
     public void save(List<Task> tasks) {
-    //used filewriter initially but gpt suggest to use bufferedwriter to improve performance
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
-            for (Task task : tasks) {
-                writer.write(task.toSaveFormat());
-                writer.newLine();
+        try (FileWriter fw = new FileWriter(file);
+             // chatgpt suggested use bufferedwriter to improve performance
+             BufferedWriter bw = new BufferedWriter(fw)) {
+            for (Task t : tasks) {
+                bw.write(t.toSaveFormat());
+                bw.newLine();
             }
         } catch (IOException e) {
             System.out.println("Error saving file: " + e.getMessage());
         }
     }
 
-    public List<Task> load() {
-        List<Task> tasks = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
-           String line;
-            while ((line = reader.readLine()) != null) {
-                line = line.trim();// its better to trim as we nvr know if there will be problematic lines
-                if (line.isEmpty()) {
-                    continue;
-                }
-
-                Task task = TaskParser.parseTask(line);
-                if (task != null) {
-                    tasks.add(task);
-                }
-            }
-
-
-        } catch (IOException e) {
-            System.out.println("Error loading file: " + e.getMessage());
-        }
-        return tasks;
-    }
 }
