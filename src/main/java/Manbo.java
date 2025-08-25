@@ -13,7 +13,7 @@ import java.time.format.DateTimeParseException;
 public class Manbo {
     private static final Storage storage = new Storage("data/manbo.txt");
     private static final DateTimeFormatter IN_DATE = DateTimeFormatter.ISO_LOCAL_DATE;  // yyyy-MM-dd
-    private static final DateTimeFormatter IN_DT   = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"); // yyyy-MM-dd HHmm
+    private static final DateTimeFormatter IN_DT_TIME   = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"); // yyyy-MM-dd HHmm
 
     static String logo = " __  __    _    _   _ ____   ___   \n"
             + "|  \\/  |  / \\  | \\ | | __ ) / _ \\  \n"
@@ -169,46 +169,73 @@ public class Manbo {
     private static void addDeadline(String input) throws ManboException {
         if (input.length() <= 9) throw new EmptyDescriptionException("deadline");
 
-        String[] parts = input.substring(9).split(" /by ");
+        String[] parts = input.substring(9).split("\\s+/by\\s+");
         if (parts.length < 2) throw new ManboException("Please specify the /by date as yyyy-MM-dd.");
 
         String desc = parts[0].trim();
         String byStr = parts[1].trim();
 
+        if (!byStr.matches("\\d{4}-\\d{2}-\\d{2}")) {
+            throw new ManboException("Invalid date format. Use yyyy-MM-dd (e.g., 2019-12-02).");
+        }
+
+
+        int year = Integer.parseInt(byStr.substring(0, 4));
+        int month = Integer.parseInt(byStr.substring(5, 7));
+        int day = Integer.parseInt(byStr.substring(8,10));
+        if (month < 1 || month > 12) {
+            throw new ManboException("Invalid month: " + month + ". Month must be 1-12.");
+        }
+        if (day < 1 || day > 31) {
+            throw new ManboException("Invalid day: " + day + ". Day must be 1-31.");
+        }
+
         try {
             LocalDate by = LocalDate.parse(byStr, IN_DATE);
+
             Task t = new Deadline(desc, by);
             tasks.add(t);
             storage.save(tasks);
             printWithBorder("Got it. I've added this task:\n   " + t +
                     "\n Now you have " + tasks.size() + " tasks in the list.");
         } catch (DateTimeParseException e) {
-            throw new ManboException("Invalid date. Use yyyy-MM-dd (e.g., 2019-12-02).");
+            throw new ManboException("Invalid date value: please check the whether the given date exist for the given month.");
         }
-
     }
+
 
     private static void addEvent(String input) throws ManboException {
         if (input.length() <= 6) throw new EmptyDescriptionException("event");
 
-        // expected: event meeting /from 2019-12-02 1400 /to 1600   OR full datetime for both
-        String[] parts = input.substring(6).split(" /from | /to ");
+        String[] parts = input.substring(6).split("\\s+/from\\s+|\\s+/to\\s+");
         if (parts.length < 3) throw new ManboException("Please specify both /from and /to.");
 
-        String desc = parts[0].trim();
+        String desc    = parts[0].trim();
         String fromStr = parts[1].trim();
         String toStr   = parts[2].trim();
 
-        try {
-            LocalDateTime from = LocalDateTime.parse(fromStr, IN_DT);
+        if (!fromStr.matches("\\d{4}-\\d{2}-\\d{2}\\s\\d{4}")) {
+            throw new ManboException("Invalid /from format. Use yyyy-MM-dd HHmm (e.g., 2019-12-02 0900).");
+        }
+        // the one after || is for time shortcut
+        if (!(toStr.matches("\\d{4}-\\d{2}-\\d{2}\\s\\d{4}") || toStr.matches("\\d{4}"))) {
+            throw new ManboException("Invalid /to format. Use yyyy-MM-dd HHmm or HHmm.");
+        }
 
-            // If user gave only time for /to, allow smart completion (optional).
-            LocalDateTime to;
-            if (toStr.matches("\\d{4}")) { // e.g., "1600"
-                to = LocalDateTime.parse(fromStr.substring(0, 10) + " " + toStr, IN_DT);
-            } else {
-                to = LocalDateTime.parse(toStr, IN_DT);
-            }
+        String fromDate = fromStr.substring(0, 10);
+        String fromTime = fromStr.substring(11, 15);
+        checkDateRanges(fromDate);
+        checkTimeRanges(fromTime);
+
+        String toDate = toStr.matches("\\d{4}") ? fromDate : toStr.substring(0, 10);
+        String toTime = toStr.matches("\\d{4}") ? toStr : toStr.substring(11, 15);
+        checkDateRanges(toDate);
+        checkTimeRanges(toTime);
+
+        try {
+            LocalDateTime from = LocalDateTime.parse(fromDate + " " + fromTime, IN_DT_TIME);
+
+            LocalDateTime to = LocalDateTime.parse(toDate + " " + toTime, IN_DT_TIME);
 
             Task t = new Event(desc, from, to);
             tasks.add(t);
@@ -216,7 +243,33 @@ public class Manbo {
             printWithBorder("Got it. I've added this task:\n   " + t +
                     "\n Now you have " + tasks.size() + " tasks in the list.");
         } catch (DateTimeParseException e) {
-            throw new ManboException("Invalid date/time. Use yyyy-MM-dd HHmm (e.g., 2019-12-02 1800).");
+            // Format was OK; the value itself is impossible (e.g., 2025-02-30 1200)
+            throw new ManboException("Invalid date/time value (e.g., Feb 30 or 24:61). Please check the calendar and time range.");
+        }
+    }
+
+    private static void checkDateRanges(String ymd) throws ManboException {
+        int month = Integer.parseInt(ymd.substring(5, 7));
+        int day = Integer.parseInt(ymd.substring(8,10));
+        if (month < 1 || month > 12) {
+            throw new ManboException("Invalid month: " + month + ". Month must be 1-12.");
+        }
+        if (day < 1 || day > 31) {
+            throw new ManboException("Invalid day: " + day + ". Day must be 1-31.");
+        }
+    }
+
+    private static void checkTimeRanges(String hhmm) throws ManboException {
+        if (!hhmm.matches("\\d{4}")) {
+            throw new ManboException("Invalid time format. Use HHmm (e.g., 0930).");
+        }
+        int hour = Integer.parseInt(hhmm.substring(0,2));
+        int min= Integer.parseInt(hhmm.substring(2,4));
+        if (hour < 0 || hour > 23) {
+            throw new ManboException("Invalid hour: " + hour + ". Hour must be 00-23.");
+        }
+        if (min < 0 || min > 59) {
+            throw new ManboException("Invalid minute: " + min + ". Minute must be 00-59.");
         }
     }
 
