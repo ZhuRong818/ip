@@ -1,4 +1,4 @@
-package Manbo.task;
+package manbo.task;
 
 import java.util.ArrayList;
 import java.util.Collections;

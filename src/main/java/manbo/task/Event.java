@@ -1,4 +1,4 @@
-package Manbo.task;
+package manbo.task;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

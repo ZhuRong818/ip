@@ -1,5 +1,5 @@
-package Manbo.ui;
-import Manbo.task.Task;
+package manbo.ui;
+import manbo.task.Task;
 import java.util.List;
 import java.util.Scanner;
 

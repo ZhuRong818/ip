@@ -1,9 +1,9 @@
-package Manbo.parser;
+package manbo.parser;
 
-import Manbo.task.Deadline;
-import Manbo.task.Event;
-import Manbo.task.Task;
-import Manbo.task.Todo;
+import manbo.task.Deadline;
+import manbo.task.Event;
+import manbo.task.Task;
+import manbo.task.Todo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

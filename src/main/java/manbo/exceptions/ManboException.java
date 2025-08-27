@@ -1,4 +1,4 @@
-package Manbo.exceptions;
+package manbo.exceptions;
 
 public class ManboException extends Exception{
     public ManboException(String message) { super(message); }

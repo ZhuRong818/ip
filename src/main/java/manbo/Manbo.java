@@ -1,17 +1,17 @@
-package Manbo;
+package manbo;
 
 import java.util.*;
-import Manbo.exceptions.ManboException;
-import Manbo.exceptions.UnrecognisedInputException;
-import Manbo.exceptions.InvalidIndexException;
-import Manbo.exceptions.IndexOutOfRangeException;
-import Manbo.exceptions.MissingWhitespaceException;
-import Manbo.exceptions.EmptyDescriptionException;
-import Manbo.storage.Storage;
-import Manbo.task.Deadline;
-import Manbo.task.Event;
-import Manbo.task.Task;
-import Manbo.task.Todo;
+import manbo.exceptions.ManboException;
+import manbo.exceptions.UnrecognisedInputException;
+import manbo.exceptions.InvalidIndexException;
+import manbo.exceptions.IndexOutOfRangeException;
+import manbo.exceptions.MissingWhitespaceException;
+import manbo.exceptions.EmptyDescriptionException;
+import manbo.storage.Storage;
+import manbo.task.Deadline;
+import manbo.task.Event;
+import manbo.task.Task;
+import manbo.task.Todo;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;

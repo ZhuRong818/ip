@@ -1,7 +1,7 @@
-package Manbo.storage;
+package manbo.storage;
 
-import Manbo.task.Task;
-import Manbo.parser.TaskParser;
+import manbo.task.Task;
+import manbo.parser.TaskParser;
 
 import java.io.*;
 import java.util.*;

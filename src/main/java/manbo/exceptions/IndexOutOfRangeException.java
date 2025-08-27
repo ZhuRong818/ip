@@ -1,4 +1,4 @@
-package Manbo.exceptions;
+package manbo.exceptions;
 
 public class IndexOutOfRangeException extends ManboException {
     public  IndexOutOfRangeException(int i, int size) {

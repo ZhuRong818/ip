@@ -1,4 +1,4 @@
-package Manbo.task;
+package manbo.task;
 
 public class Todo extends Task {
 

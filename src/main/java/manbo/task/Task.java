@@ -1,4 +1,4 @@
-package Manbo.task;
+package manbo.task;
 
 public abstract class Task {
     // this kind of break info hiding
