@@ -10,6 +10,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+
 public class Manbo {
     private static final Storage storage = new Storage("data/manbo.txt");
     private static final DateTimeFormatter IN_DATE = DateTimeFormatter.ISO_LOCAL_DATE;  // yyyy-MM-dd
