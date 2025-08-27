@@ -1,6 +1,8 @@
+package Manbo.task;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-public class Event extends Task{
+public class Event extends Task {
     private LocalDateTime from;
     private LocalDateTime to;
     private static final DateTimeFormatter output = DateTimeFormatter.ofPattern("MMM d yyyy HH:mm");

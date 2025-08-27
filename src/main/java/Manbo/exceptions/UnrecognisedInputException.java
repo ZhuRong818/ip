@@ -1,4 +1,4 @@
-package exceptions;
+package Manbo.exceptions;
 
 public class UnrecognisedInputException extends ManboException {
     public UnrecognisedInputException(String input) {

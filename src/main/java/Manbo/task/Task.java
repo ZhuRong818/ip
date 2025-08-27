@@ -1,3 +1,5 @@
+package Manbo.task;
+
 public abstract class Task {
     // this kind of break info hiding
     private boolean isDone;

@@ -1,6 +1,8 @@
+package Manbo.task;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-public class Deadline extends Task{
+public class Deadline extends Task {
     private final LocalDate by;
     private static final DateTimeFormatter Output = DateTimeFormatter.ofPattern("MMM d yyyy");
     public Deadline(String description, LocalDate by) {

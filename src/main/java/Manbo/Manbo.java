@@ -1,10 +1,18 @@
+package Manbo;
+
 import java.util.*;
-import exceptions.ManboException;
-import exceptions.UnrecognisedInputException;
-import exceptions.InvalidIndexException;
-import exceptions.IndexOutOfRangeException;
-import exceptions.MissingWhitespaceException;
-import exceptions.EmptyDescriptionException;
+import Manbo.exceptions.ManboException;
+import Manbo.exceptions.UnrecognisedInputException;
+import Manbo.exceptions.InvalidIndexException;
+import Manbo.exceptions.IndexOutOfRangeException;
+import Manbo.exceptions.MissingWhitespaceException;
+import Manbo.exceptions.EmptyDescriptionException;
+import Manbo.storage.Storage;
+import Manbo.task.Deadline;
+import Manbo.task.Event;
+import Manbo.task.Task;
+import Manbo.task.Todo;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -85,7 +93,7 @@ public class Manbo {
     private static void printWelcome() {
         System.out.println(logo);
         System.out.println("____________________________________________________________");
-        System.out.println(" Hello! I'm Manbo");
+        System.out.println(" Hello! I'm Manbo.Manbo");
         System.out.println(" What can I do for you?");
         System.out.println("____________________________________________________________");
     }

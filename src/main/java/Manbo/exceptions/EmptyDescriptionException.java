@@ -1,4 +1,4 @@
-package exceptions;
+package Manbo.exceptions;
 
 public class EmptyDescriptionException extends ManboException {
     public EmptyDescriptionException(String command) {

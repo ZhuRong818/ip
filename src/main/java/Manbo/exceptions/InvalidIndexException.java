@@ -1,4 +1,4 @@
-package exceptions;
+package Manbo.exceptions;
 // this is used for wrong index after the task type (not out of range), such as mark two
 public class InvalidIndexException extends ManboException {
     public InvalidIndexException(String input) {
