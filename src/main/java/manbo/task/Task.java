@@ -21,7 +21,7 @@ public abstract class Task {
     public Task(String description, boolean isDone) {
         this.description = description;
         this.isDone = isDone;
-    }
+  }
     public abstract String toSaveFormat();// since we wont use task directly
     public void markAsDone(){
         this.isDone = true;

@@ -25,7 +25,6 @@ public class TaskList {
         return tasks.remove(index0);
     }
 
-
     public void addAll(List<Task> more) {
         tasks.addAll(more);
     }
