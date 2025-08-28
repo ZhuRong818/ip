@@ -11,18 +11,43 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
+/**
+ * Handles reading from and writing to the persistent storage file.
+ * <p>
+ * The storage file contains serialized {@link Task} objects
+ * in a line-based format:
+ * <ul>
+ *     <li>Todo: {@code T | 1 | description}</li>
+ *     <li>Deadline: {@code D | 0 | description | yyyy-MM-dd}</li>
+ *     <li>Event: {@code E | 1 | description | yyyy-MM-dd HHmm | yyyy-MM-dd HHmm}</li>
+ * </ul>
+ * where the second field {@code 1/0} indicates done/not-done.
+ */
 public class Storage {
+    /** Backing file for persistent task storage. */
     private final File file;
 
-    // Formatters used for event/deadline fields
-    private static final DateTimeFormatter DATE  = DateTimeFormatter.ISO_LOCAL_DATE;           // yyyy-MM-dd
+    /** Date formatter used for {@link Deadline} dates (yyyy-MM-dd). */
+    private static final DateTimeFormatter DATE  = DateTimeFormatter.ISO_LOCAL_DATE;
+
+    /** Date-time formatter used for {@link Event} start/end (yyyy-MM-dd HHmm). */
     private static final DateTimeFormatter DTTM  = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
+    /**
+     * Creates a new {@code Storage} instance tied to the given file path.
+     * Ensures the file and parent directories exist.
+     *
+     * @param path the file path to use for persistence (e.g., "data/manbo.txt")
+     */
     public Storage(String path) {
         this.file = new File(path);
         createNonExistentFile();
     }
 
+    /**
+     * Ensures that the storage file and its parent directories exist.
+     * Creates them if necessary.
+     */
     private void createNonExistentFile() {
         try {
             File directory = file.getParentFile();
@@ -37,13 +62,18 @@ public class Storage {
         }
     }
 
+    /**
+     * Loads all tasks from storage.
+     *
+     * @return a list of {@link Task} objects, possibly empty but never null
+     */
     public List<Task> load() {
         List<Task> tasks = new ArrayList<>();
         try (Scanner s = new Scanner(file, "UTF-8")) {
             while (s.hasNextLine()) {
                 String line = s.nextLine().trim();
                 if (line.isEmpty()) continue;
-                Task t = decodeLine(line); // ⬅️ no Parser dependency
+                Task t = decodeLine(line);
                 if (t != null) tasks.add(t);
             }
         } catch (FileNotFoundException e) {
@@ -52,12 +82,16 @@ public class Storage {
         return tasks;
     }
 
+    /**
+     * Saves the given list of tasks to storage, overwriting existing contents.
+     *
+     * @param tasks the tasks to write
+     */
     public void save(List<Task> tasks) {
         try (FileWriter fw = new FileWriter(file);
              BufferedWriter bw = new BufferedWriter(fw)) {
             for (Task t : tasks) {
-                // If you already have Task.toSaveFormat(), keep using it:
-                bw.write(t.toSaveFormat());
+                bw.write(t.toSaveFormat()); // delegate to Task serialization
                 bw.newLine();
             }
         } catch (IOException e) {
@@ -66,11 +100,17 @@ public class Storage {
     }
 
     /**
-     * Decode a single line from storage into a Task instance.
-     * Expected formats:
-     *  T | 1 | description
-     *  D | 0 | description | yyyy-MM-dd
-     *  E | 1 | description | yyyy-MM-dd HHmm | yyyy-MM-dd HHmm
+     * Decodes a single line from storage into a {@link Task}.
+     *
+     * <p>Expected formats:
+     * <ul>
+     *   <li>{@code T | 1 | description}</li>
+     *   <li>{@code D | 0 | description | yyyy-MM-dd}</li>
+     *   <li>{@code E | 1 | description | yyyy-MM-dd HHmm | yyyy-MM-dd HHmm}</li>
+     * </ul>
+     *
+     * @param line the raw line from the storage file
+     * @return the corresponding {@link Task}, or {@code null} if malformed
      */
     private Task decodeLine(String line) {
         String[] parts = line.split("\\s*\\|\\s*");
