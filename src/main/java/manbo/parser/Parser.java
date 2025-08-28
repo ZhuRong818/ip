@@ -3,17 +3,44 @@ package manbo.parser;
 import manbo.command.*;
 import manbo.exceptions.*;
 
+/**
+ * The {@code Parser} is responsible for interpreting raw user input
+ * and converting it into an appropriate {@link Command}.
+ *
+ * <p>It supports commands such as:
+ * <ul>
+ *   <li>{@code todo <description>}</li>
+ *   <li>{@code deadline <description> /by yyyy-MM-dd}</li>
+ *   <li>{@code event <description> /from yyyy-MM-dd HHmm /to yyyy-MM-dd HHmm}</li>
+ *   <li>{@code mark <index>}</li>
+ *   <li>{@code unmark <index>}</li>
+ *   <li>{@code delete <index>}</li>
+ *   <li>{@code list}</li>
+ *   <li>{@code bye}</li>
+ * </ul>
+ *
+ * <p>Invalid or unrecognized input results in a {@link ManboException}.
+ */
 public class Parser {
 
+    /**
+     * Parses a raw user input string into a corresponding {@link Command}.
+     *
+     * @param input raw user input (e.g., "deadline return book /by 2025-09-01")
+     * @return a {@link Command} object representing the action
+     * @throws ManboException if the input is null, empty, or invalid
+     */
     public static Command parse(String input) throws ManboException {
         if (input == null) throw new UnrecognisedInputException("null");
         String trimmed = input.trim();
         if (trimmed.isEmpty()) throw new UnrecognisedInputException("(empty)");
 
+        // Split input into command keyword + arguments
         String[] parts = trimmed.split("\\s+", 2);
         String keyword = parts[0].toLowerCase();
         String args = parts.length > 1 ? parts[1] : "";
 
+        // Match keyword to supported commands
         switch (keyword) {
             case "bye":
                 return new ExitCommand();
@@ -60,6 +87,14 @@ public class Parser {
         }
     }
 
+    /**
+     * Parses a task index argument from a string.
+     *
+     * @param args raw argument string (expected to be a positive integer)
+     * @param cmd  the command name (for error messages)
+     * @return zero-based index into the task list
+     * @throws ManboException if the argument is missing, not numeric, or invalid
+     */
     private static int parseIndex(String args, String cmd) throws ManboException {
         if (args == null || args.isBlank()) throw new EmptyDescriptionException(cmd);
         args = args.trim();
@@ -67,7 +102,15 @@ public class Parser {
         return Integer.parseInt(args) - 1;
     }
 
-    // If user typed only HHmm for /to, reuse the date from /from.
+    /**
+     * Normalizes the {@code /to} argument for events. If the user only provides
+     * a time (HHmm), this method prepends the date from the {@code /from} datetime.
+     *
+     * @param to   the raw {@code /to} argument (either full datetime or just HHmm)
+     * @param from the full {@code /from} datetime (yyyy-MM-dd HHmm)
+     * @return a normalized {@code /to} datetime string
+     * @throws ManboException if input is malformed
+     */
     private static String normalizeTo(String to, String from) throws ManboException {
         if (to.matches("\\d{4}")) {
             String datePart = from.substring(0, 10); // yyyy-MM-dd

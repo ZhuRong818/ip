@@ -8,15 +8,35 @@ import manbo.parser.Parser;
 import manbo.command.Command;
 import manbo.exceptions.ManboException;
 
+/**
+ * Main class for the Manbo task management application.
+ * Manbo is a personal task tracker that helps users manage their todos, deadlines, and events.
+ * The application supports adding, listing, marking, unmarking, and deleting tasks.
+ *
+ * @author Manbo Development Team
+ * @version 1.0
+ */
 public class Manbo {
     private final Storage storage = new Storage("data/manbo.txt");
     private final List<Task> tasks = new ArrayList<>();
     private final Ui ui = new Ui();
 
+    /**
+     * Main entry point for the Manbo application.
+     * Creates a new instance of Manbo and starts the application.
+     *
+     * @param args command line arguments (not used)
+     */
     public static void main(String[] args) {
         new Manbo().run();
     }
 
+    /**
+     * Runs the main application loop.
+     * Initializes the application, loads existing tasks from storage,
+     * and processes user commands until an exit command is received.
+     * Handles exceptions and displays appropriate error messages to the user.
+     */
     public void run() {
         ui.showWelcome();
         tasks.addAll(storage.load());
