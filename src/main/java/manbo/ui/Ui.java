@@ -43,6 +43,22 @@ public class Ui {
         showLine();
     }
 
+    // in manbo.ui.Ui
+    public void showMatches(List<Task> matches) {
+        showLine();
+        if (matches.isEmpty()) {
+            System.out.println(" No matching tasks found.");
+            showLine();
+            return;
+        }
+        System.out.println(" Here are the matching tasks in your list:");
+        for (int i = 0; i < matches.size(); i++) {
+            System.out.println(" " + (i + 1) + "." + matches.get(i));
+        }
+        showLine();
+    }
+
+
     public void sayBye() {
         System.out.println(" Bye. Hope to see you again soon!");
     }

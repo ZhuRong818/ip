@@ -40,6 +40,10 @@ public class Parser {
                 if (seg.length < 2) throw new ManboException("Please specify /by as yyyy-MM-dd.");
                 return new AddDeadlineCommand(seg[0].trim(), seg[1].trim());
             }
+            case "find":
+                if (args.isBlank()) throw new EmptyDescriptionException("find");
+                return new FindCommand(args);
+
 
             case "event": {
                 if (args.isBlank()) throw new EmptyDescriptionException("event");
