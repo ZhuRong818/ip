@@ -21,8 +21,8 @@ import java.time.format.DateTimeParseException;
 
 public class Manbo {
     private static final Storage storage = new Storage("data/manbo.txt");
-    private static final DateTimeFormatter IN_DATE = DateTimeFormatter.ISO_LOCAL_DATE;  // yyyy-MM-dd
-    private static final DateTimeFormatter IN_DT_TIME   = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"); // yyyy-MM-dd HHmm
+            static final DateTimeFormatter IN_DATE = DateTimeFormatter.ISO_LOCAL_DATE;  // yyyy-MM-dd
+            static final DateTimeFormatter IN_DT_TIME = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm"); // yyyy-MM-dd HHmm
 
     static String logo = " __  __    _    _   _ ____   ___   \n"
             + "|  \\/  |  / \\  | \\ | | __ ) / _ \\  \n"
@@ -257,7 +257,7 @@ public class Manbo {
         }
     }
 
-    private static void checkDateRanges(String ymd) throws ManboException {
+     static void checkDateRanges(String ymd) throws ManboException {
         int month = Integer.parseInt(ymd.substring(5, 7));
         int day = Integer.parseInt(ymd.substring(8,10));
         if (month < 1 || month > 12) {
@@ -268,7 +268,7 @@ public class Manbo {
         }
     }
 
-    private static void checkTimeRanges(String hhmm) throws ManboException {
+     static void checkTimeRanges(String hhmm) throws ManboException {
         if (!hhmm.matches("\\d{4}")) {
             throw new ManboException("Invalid time format. Use HHmm (e.g., 0930).");
         }
