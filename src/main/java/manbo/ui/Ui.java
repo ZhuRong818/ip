@@ -6,6 +6,9 @@ import manbo.task.Task;
 
 public class Ui {
     private final Scanner in = new Scanner(System.in);
+    private final StringBuilder buf = new StringBuilder();   // <-- NEW
+
+    private static final String LINE = "____________________________________________________________";
     private final String logo =
             " __  __    _    _   _ ____   ___   \n" +
                     "|  \\/  |  / \\  | \\ | | __ ) / _ \\  \n" +
@@ -13,53 +16,57 @@ public class Ui {
                     "| |  | |/ ___ \\| |\\  | |_) | |_| | \n" +
                     "|_|  |_/_/   \\_\\_| \\_|____/ \\___/  \n";
 
+    // --- Buffer helpers (NEW) ---
+    public void reset() { buf.setLength(0); }
+    public String out() { return buf.toString(); }
+    private void p(String s) { System.out.println(s); buf.append(s).append('\n'); }
+    // -----------------------------
+
     public void showWelcome() {
-        System.out.println(logo);
+        p(logo);
         showLine();
-        System.out.println(" Hello! I'm Manbo.Manbo");
-        System.out.println(" What can I do for you?");
+        p(" Hello! I'm Manbo");
+        p(" What can I do for you?");
         showLine();
     }
 
     public String readCommand() { return in.nextLine(); }
-    public void showLine() { System.out.println("____________________________________________________________"); }
+    public void showLine() { p(LINE); }
 
     public void showError(String msg) {
         showLine();
-        System.out.println(" " + msg);
+        p(" " + msg);
+        showLine();
     }
 
     public void info(String msg) {
         showLine();
-        System.out.println(" " + msg);
+        p(" " + msg);
+        showLine();
     }
 
     public void showList(List<Task> tasks) {
         showLine();
-        System.out.println(" Here are the tasks in your list:");
+        p(" Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println(" " + (i + 1) + "." + tasks.get(i));
+            p(" " + (i + 1) + "." + tasks.get(i));
         }
         showLine();
     }
 
-    // in manbo.ui.Ui
     public void showMatches(List<Task> matches) {
         showLine();
         if (matches.isEmpty()) {
-            System.out.println(" No matching tasks found.");
+            p(" No matching tasks found.");
             showLine();
             return;
         }
-        System.out.println(" Here are the matching tasks in your list:");
+        p(" Here are the matching tasks in your list:");
         for (int i = 0; i < matches.size(); i++) {
-            System.out.println(" " + (i + 1) + "." + matches.get(i));
+            p(" " + (i + 1) + "." + matches.get(i));
         }
         showLine();
     }
 
-
-    public void sayBye() {
-        System.out.println(" Bye. Hope to see you again soon!");
-    }
+    public void sayBye() { p(" Bye. Hope to see you again soon!"); }
 }

@@ -56,4 +56,33 @@ public class Manbo {
             }
         }
     }
+
+// In manbo/Manbo.java
+
+    /** A tiny result type for GUI use. */
+    public static final class Reply {
+        public final String text;
+        public final boolean exit;
+        public Reply(String text, boolean exit) { this.text = text; this.exit = exit; }
+    }
+
+    /** Run one user input through the *same* pipeline the CLI uses. */
+    public Reply handle(String input) {
+        try {
+            // If your Ui has no reset(), just remove the next line.
+            ui.reset();
+
+            Command c = Parser.parse(input);
+            c.execute(tasks, ui, storage);   // exactly what the CLI does
+            // If your commands already save, you can omit the next line.
+            storage.save(tasks);
+
+            return new Reply(ui.out(), c.isExit());  // ui.out() is what your tests used
+        } catch (ManboException e) {
+            return new Reply(e.getMessage(), false);
+        }
+    }
+
+
+
 }

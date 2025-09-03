@@ -28,7 +28,7 @@ public class MainWindow extends AnchorPane {
     public void setBackend(ManboAdapter b) {
         this.backend = b;
         // Optional greeting
-        dialogContainer.getChildren().add(DialogBox.getDukeDialog("Hello! I'm Manbo.\nType something!", manboImage));
+        dialogContainer.getChildren().add(DialogBox.getManboDialog("Hello! I'm Manbo.\nType something!", manboImage));
     }
 
     /** Handles Enter key and Send button. */
@@ -36,10 +36,15 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         String response = backend.getResponse(input);
+
+        // In MainWindow.handleUserInput()
+
+
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getDukeDialog(response, manboImage)
+                DialogBox.getManboDialog(response, manboImage)
         );
         userInput.clear();
     }
+
 }
