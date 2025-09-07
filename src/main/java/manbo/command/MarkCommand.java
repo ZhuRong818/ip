@@ -43,6 +43,9 @@ public class MarkCommand extends Command {
      */
     @Override
     public void execute(List<Task> tasks, Ui ui, Storage storage) throws ManboException {
+        assert tasks != null : "Task list must not be null";
+        assert ui != null : "Ui must not be null";
+        assert storage != null : "Storage must not be null";
         // Validate index
         if (index < 0 || index >= tasks.size()) {
             throw new IndexOutOfRangeException(index + 1, tasks.size());

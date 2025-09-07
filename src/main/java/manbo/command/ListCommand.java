@@ -24,8 +24,13 @@ public class ListCommand extends Command {
      */
     @Override
     public void execute(List<Task> tasks, Ui ui, Storage storage) {
+        assert tasks != null : "Task list must not be null";
+        assert ui != null : "Ui must not be null";
+        assert storage != null : "Storage must not be null";
+
         ui.showList(tasks);
     }
+
 
     /**
      * Indicates whether this command should exit the application.
