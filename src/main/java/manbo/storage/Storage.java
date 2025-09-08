@@ -40,8 +40,15 @@ public class Storage {
      * @param path the file path to use for persistence (e.g., "data/manbo.txt")
      */
     public Storage(String path) {
+        // Dev invariant: parser/framework should not pass null/blank paths
+        assert path != null && !path.isBlank() : "Storage path must not be null/blank";
+
         this.file = new File(path);
         createNonExistentFile();
+
+        // Postcondition: after creation, file should exist and be a regular file
+        assert file.exists() : "Storage file should exist after initialization";
+        assert file.isFile() : "Storage path should refer to a regular file, not a directory";
     }
 
     /**
@@ -53,6 +60,7 @@ public class Storage {
             File directory = file.getParentFile();
             if (directory != null && !directory.exists()) {
                 directory.mkdirs();
+
             }
             if (!file.exists()) {
                 file.createNewFile();
@@ -69,6 +77,8 @@ public class Storage {
      */
     public List<Task> load() {
         List<Task> tasks = new ArrayList<>();
+        assert file.isFile() : "Storage file missing during load";
+
         try (Scanner s = new Scanner(file, "UTF-8")) {
             while (s.hasNextLine()) {
                 String line = s.nextLine().trim();
@@ -88,6 +98,8 @@ public class Storage {
      * @param tasks the tasks to write
      */
     public void save(List<Task> tasks) {
+
+        assert tasks != null : "Tasks list must not be null";
         try (FileWriter fw = new FileWriter(file);
              BufferedWriter bw = new BufferedWriter(fw)) {
             for (Task t : tasks) {
@@ -113,6 +125,8 @@ public class Storage {
      * @return the corresponding {@link Task}, or {@code null} if malformed
      */
     private Task decodeLine(String line) {
+        assert line != null && !line.isBlank() : "decodeLine requires a non-blank line";
+
         String[] parts = line.split("\\s*\\|\\s*");
         if (parts.length < 3) return null;
 
