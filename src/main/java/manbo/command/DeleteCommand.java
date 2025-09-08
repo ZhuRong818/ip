@@ -43,6 +43,9 @@ public class DeleteCommand extends Command {
      */
     @Override
     public void execute(List<Task> tasks, Ui ui, Storage storage) throws ManboException {
+        assert tasks != null : "Task list must not be null";
+        assert ui != null : "Ui must not be null";
+        assert storage != null : "Storage must not be null";
         // Validate index range
         if (index < 0 || index >= tasks.size()) {
             throw new IndexOutOfRangeException(index + 1, tasks.size());

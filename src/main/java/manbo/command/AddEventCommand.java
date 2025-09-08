@@ -42,6 +42,10 @@ public class AddEventCommand extends Command {
      * @param toDateTime   end datetime string (yyyy-MM-dd HHmm)
      */
     public AddEventCommand(String description, String fromDateTime, String toDateTime) {
+        assert description != null : "description must not be null";
+        assert fromDateTime != null : "fromDateTime must not be null";
+        assert toDateTime != null : "toDateTime must not be null";
+
         this.description = description;
         this.fromDateTime = fromDateTime;
         this.toDateTime = toDateTime;
@@ -58,6 +62,11 @@ public class AddEventCommand extends Command {
      */
     @Override
     public void execute(List<Task> tasks, Ui ui, Storage storage) throws ManboException {
+
+        assert tasks != null : "Task list must not be null";
+        assert ui != null : "Ui must not be null";
+        assert storage != null : "Storage must not be null";
+
         // Ensure description is present
         if (description == null || description.isBlank()) {
             throw new EmptyDescriptionException("event");

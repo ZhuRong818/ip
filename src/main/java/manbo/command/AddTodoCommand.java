@@ -29,6 +29,8 @@ public class AddTodoCommand extends Command {
      * @param description description of the todo task
      */
     public AddTodoCommand(String description) {
+        assert description != null && !description.isBlank()
+                : "Todo description must not be null or blank";
         this.description = description;
     }
 
@@ -43,6 +45,10 @@ public class AddTodoCommand extends Command {
      */
     @Override
     public void execute(List<Task> tasks, Ui ui, Storage storage) throws ManboException {
+        assert tasks != null : "Task list must not be null";
+        assert ui != null : "Ui must not be null";
+        assert storage != null : "Storage must not be null";
+
         // Ensure description is present
         if (description == null || description.isBlank()) {
             throw new EmptyDescriptionException("todo");

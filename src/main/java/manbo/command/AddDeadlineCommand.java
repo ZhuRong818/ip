@@ -37,6 +37,8 @@ public class AddDeadlineCommand extends Command {
      * @param byStr deadline date as a string in yyyy-MM-dd format
      */
     public AddDeadlineCommand(String description, String byStr) {
+        assert description != null : "description must not be null";
+        assert byStr != null : "byStr must not be null";
         this.description = description;
         this.byStr = byStr;
     }
@@ -52,6 +54,9 @@ public class AddDeadlineCommand extends Command {
      */
     @Override
     public void execute(List<Task> tasks, Ui ui, Storage storage) throws ManboException {
+        assert tasks != null : "Task list must not be null";
+        assert ui != null : "Ui must not be null";
+        assert storage != null : "Storage must not be null";
         // Ensure description is present
         if (description == null || description.isBlank()) {
             throw new EmptyDescriptionException("deadline");

@@ -37,8 +37,12 @@ public class Parser {
 
         // Split input into command keyword + arguments
         String[] parts = trimmed.split("\\s+", 2);
+
+        assert parts.length >= 1 : "Tokenizer must produce at least one token (keyword)";
         String keyword = parts[0].toLowerCase();
         String args = parts.length > 1 ? parts[1] : "";
+
+        assert !keyword.isBlank() : "Keyword should be non-blank after pre-checks";
 
         // Match keyword to supported commands
         switch (keyword) {
