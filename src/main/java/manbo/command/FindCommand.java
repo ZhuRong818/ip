@@ -2,6 +2,8 @@ package manbo.command;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 import manbo.task.Task;
 import manbo.storage.Storage;
 import manbo.ui.Ui;
@@ -33,16 +35,16 @@ public class FindCommand extends Command {
             throw new EmptyDescriptionException("find");
         }
 
-        String k = keyword.trim().toLowerCase();
-        List<Task> matches = new ArrayList<>();
+        final String k = keyword.trim().toLowerCase();
 
-        for (Task t : tasks) {
-            // assume Task has getDescription(); fall back to t.toString() if needed
-            String desc = t.getDescription().toLowerCase();
-            if (desc.contains(k)) {
-                matches.add(t);
-            }
-        }
+        List<Task> matches = tasks.stream()
+                .filter(t -> {
+                    assert t != null : "Task list contains null";
+                    String desc = t.getDescription();     // or t.toString() if that’s what you show
+                    assert desc != null : "Task description must not be null";
+                    return desc.toLowerCase(Locale.ROOT).contains(k);
+                })
+                .collect(Collectors.toList());
 
         ui.showMatches(matches);
     }
