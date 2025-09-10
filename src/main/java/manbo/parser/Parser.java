@@ -75,7 +75,6 @@ public class Parser {
                 if (args.isBlank()) throw new EmptyDescriptionException("find");
                 return new FindCommand(args);
 
-
             case "event": {
                 if (args.isBlank()) throw new EmptyDescriptionException("event");
                 String[] seg = args.split("\\s+/from\\s+|\\s+/to\\s+");
@@ -85,6 +84,8 @@ public class Parser {
                 String to   = normalizeTo(seg[2].trim(), from); // allow HHmm shortcut
                 return new AddEventCommand(desc, from, to);
             }
+            case "stats":
+                return new StatsCommand();
 
             default:
                 throw new UnrecognisedInputException(keyword);
