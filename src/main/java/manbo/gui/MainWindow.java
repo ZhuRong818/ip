@@ -8,6 +8,10 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
+/**
+ * The main chat window for the Manbo app.
+ * Handles user input, displays both user and bot dialogs.
+ */
 public class MainWindow extends AnchorPane {
     @FXML private ScrollPane scrollPane;
     @FXML private VBox dialogContainer;
@@ -16,35 +20,54 @@ public class MainWindow extends AnchorPane {
 
     private ManboAdapter backend;
 
-    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/ManboBot.png"));
-    private final Image manboImage = new Image(this.getClass().getResourceAsStream("/images/ManboUser1.png"));
+    // Swap images if needed
+    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/ManboUser1.png"));
+    private final Image manboImage = new Image(this.getClass().getResourceAsStream("/images/ManboBot.png"));
 
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Inject backend (adapter). */
+    /** Inject backend adapter. */
     public void setBackend(ManboAdapter b) {
         this.backend = b;
-        // Optional greeting
-        dialogContainer.getChildren().add(DialogBox.getManboDialog("Hello! I'm Manbo.\nType something!", manboImage));
+        dialogContainer.getChildren().add(
+                DialogBox.getManboDialog("曼波，曼波～ I'm Manbo \nType something!", manboImage)
+        );
     }
 
-    /** Handles Enter key and Send button. */
+    /** Handles input when Enter is pressed or Send button clicked. */
     @FXML
     private void handleUserInput() {
         String input = userInput.getText();
+        if (input == null || input.trim().isEmpty()) {
+            return; // ignore blank submits
+        }
+
         String response = backend.getResponse(input);
 
-        // In MainWindow.handleUserInput()
+        DialogBox user = DialogBox.getUserDialog(input, userImage);
+        DialogBox bot  = DialogBox.getManboDialog(response, manboImage);
 
+        if (looksLikeError(response)) {
+            bot.markAsError(); // inline red styling (no CSS file required)
+        }
 
-        dialogContainer.getChildren().addAll(
-                DialogBox.getUserDialog(input, userImage),
-                DialogBox.getManboDialog(response, manboImage)
-        );
+        dialogContainer.getChildren().addAll(user, bot);
         userInput.clear();
     }
 
+
+    private boolean looksLikeError(String s) {
+        if (s == null) return false;
+        String t = s.toLowerCase();
+        return t.startsWith("error:")
+                || t.contains("invalid")
+                || t.contains("cannot be")
+                || t.contains("provide a valid")
+                || t.contains("not a valid")
+                || t.contains("missing")
+                || t.contains("empty");
+    }
 }
