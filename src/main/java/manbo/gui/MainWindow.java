@@ -51,7 +51,7 @@ public class MainWindow extends AnchorPane {
         DialogBox bot  = DialogBox.getManboDialog(response, manboImage);
 
         if (looksLikeError(response)) {
-            bot.markAsError(); // inline red styling (no CSS file required)
+            bot.markAsError();
         }
 
         dialogContainer.getChildren().addAll(user, bot);
