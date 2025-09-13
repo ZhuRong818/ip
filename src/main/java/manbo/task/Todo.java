@@ -10,11 +10,13 @@ public class Todo extends Task {
     }
     @Override
     public String toSaveFormat() {
-        return "T | " + (ifDone() ? "1" : "0") + " | " + getDescription();
+        return "T | "+(ifDone() ? "1" : "0") + " | " + getDescription();
     }
 
     @Override
     public String toString() {
         return "[T]" + super.toString();
+
+
     }
 }

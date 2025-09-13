@@ -9,7 +9,7 @@ public class Deadline extends Task {
         super(description);
         this.by = by;
     }
-    //this constructor is for tasks from storage to restore their isdone state
+    //this constructor is for tasks from storage to restore their isDone state
     public Deadline(String description, LocalDate by, boolean isDone) {
         super(description, isDone);
         this.by = by;
