@@ -37,12 +37,20 @@ public class MainWindow extends AnchorPane {
         String input = userInput.getText();
         String response = backend.getResponse(input);
 
-        // In MainWindow.handleUserInput()
+        boolean isError = response.startsWith("Error:");
+        DialogBox botDialog = DialogBox.getManboDialog(response, manboImage);
+
+        if (isError) {
+            botDialog.getStyleClass().add("error-dialog");
+        }
+
         dialogContainer.getChildren().addAll(
                 DialogBox.getUserDialog(input, userImage),
-                DialogBox.getManboDialog(response, manboImage)
+                botDialog
         );
+
         userInput.clear();
     }
+
 
 }

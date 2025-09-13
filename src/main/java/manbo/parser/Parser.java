@@ -25,7 +25,7 @@ import manbo.exceptions.*;
  *   <li>Exceptions are thrown for invalid input to keep parsing robust.</li>
  * </ul>
  */
-public class Parser {
+public final class Parser {
 
     // ===== Constants for splitting input =====
     private static final String SPLIT_ON_SPACES_ONCE = "\\s+"; // split keyword + args
