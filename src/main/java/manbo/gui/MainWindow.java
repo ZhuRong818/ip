@@ -1,5 +1,6 @@
 package manbo.gui;
 
+
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -7,6 +8,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+
 
 /**
  * The main chat window for the Manbo app.
@@ -23,6 +25,8 @@ public class MainWindow extends AnchorPane {
     // Swap images if needed
     private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/ManboUser1.png"));
     private final Image manboImage = new Image(this.getClass().getResourceAsStream("/images/ManboBot.png"));
+    private final Image thinkingImage = new Image(this.getClass().getResourceAsStream("/images/ManboThinking.gif"));
+
 
     @FXML
     public void initialize() {
@@ -42,14 +46,25 @@ public class MainWindow extends AnchorPane {
     private void handleUserInput() {
         String input = userInput.getText();
         if (input == null || input.trim().isEmpty()) {
-            return; // ignore blank submits
+            return;
         }
 
-        String response = backend.getResponse(input);
+        String response;
+        Image botAvatar = manboImage; // default avatar
+
+        try {
+            response = backend.getResponse(input);
+        } catch (manbo.exceptions.UnrecognisedInputException e) {
+            response = e.getMessage();
+            botAvatar = thinkingImage; // swap avatar to GIF
+        } catch (Exception e) {
+            response = "Unexpected error: " + e.getMessage();
+        }
 
         DialogBox user = DialogBox.getUserDialog(input, userImage);
-        DialogBox bot  = DialogBox.getManboDialog(response, manboImage);
+        DialogBox bot  = DialogBox.getManboDialog(response, botAvatar);
 
+        // Heuristic error styling
         if (looksLikeError(response)) {
             bot.markAsError();
         }
@@ -57,6 +72,7 @@ public class MainWindow extends AnchorPane {
         dialogContainer.getChildren().addAll(user, bot);
         userInput.clear();
     }
+
 
 
     private boolean looksLikeError(String s) {

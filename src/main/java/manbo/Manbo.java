@@ -62,8 +62,8 @@ public class Manbo {
     /** A tiny result type for GUI use. */
     public static final class Reply {
         public final String text;
-        public final boolean exit;
-        public Reply(String text, boolean exit) { this.text = text; this.exit = exit; }
+        public final boolean isExit;
+        public Reply(String text, boolean exit) { this.text = text; this.isExit = exit; }
     }
 
     /** Run one user input through the *same* pipeline the CLI uses. */
