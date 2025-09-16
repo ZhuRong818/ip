@@ -12,6 +12,6 @@ public class EmptyDescriptionException extends ManboException {
      * @param command the command type that was missing a description
      */
     public EmptyDescriptionException(String command) {
-        super("The description of a " + command + " cannot be empty.");
+        super("Error: The description of a " + command + " cannot be empty.");
     }
 }

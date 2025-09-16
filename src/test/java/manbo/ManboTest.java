@@ -1,4 +1,6 @@
 package manbo;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import manbo.command.Command;
 import manbo.exceptions.ManboException;
@@ -35,7 +37,10 @@ public class ManboTest {
                 buf.append(i + 1).append(". ").append(tasks.get(i).toString()).append("\n");
             }
         }
-        String out() { return buf.toString(); }
+        @Override
+        public String out() {
+            return buf.toString();
+        }
     }
 
     /** A Storage that writes to a temp file and ignores errors (keeps tests fast). */
