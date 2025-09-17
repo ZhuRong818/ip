@@ -1,7 +1,7 @@
 
 
 # Manbo User Guide
-![Screenshot of Manbo UI](UI.png)
+![Screenshot of Manbo UI](Ui.png)
 
 
 ---
