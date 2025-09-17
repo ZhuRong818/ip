@@ -1,8 +1,4 @@
-Perfect 👍 Thanks for sharing the formatting requirements. I’ll write your **Manbo User Guide** fully in **GitHub-flavored Markdown (GFMD)** so it will render properly on GitHub Pages, following the example template you gave.
 
-Here’s the final draft for `docs/README.md`:
-
----
 
 # Manbo User Guide
 ![Screenshot of Manbo UI](UI.png)
