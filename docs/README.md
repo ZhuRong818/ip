@@ -1,30 +1,151 @@
-# Duke User Guide
+Perfect 👍 Thanks for sharing the formatting requirements. I’ll write your **Manbo User Guide** fully in **GitHub-flavored Markdown (GFMD)** so it will render properly on GitHub Pages, following the example template you gave.
 
-// Update the title above to match the actual product name
+Here’s the final draft for `docs/README.md`:
 
-// Product screenshot goes here
+---
 
-// Product intro goes here
+# Manbo User Guide
+![Screenshot of Manbo UI](UI.png)
 
-## Adding deadlines
 
-// Describe the action and its outcome.
+---
 
-// Give examples of usage
+## 📖 Introduction
 
-Example: `keyword (optional arguments)`
+Welcome to **Manbo** 🎉 – your personal chatbot assistant.
+Manbo helps you organize tasks, set deadlines, and manage your to-do list in a simple and intuitive way.
+This guide explains all the important features and how you can use them.
 
-// A description of the expected outcome goes here
+---
+
+## 🗂 Adding deadlines
+
+Manbo allows you to add tasks with specific due dates.
+
+**Example:**
 
 ```
-expected output
+deadline Submit report /by 2025-09-20
 ```
 
-## Feature ABC
+**Expected outcome:**
 
-// Feature details
+```
+Got it. I've added this task:  
+  [D][ ] Submit report (by: Sep 20 2025)  
+Now you have 1 task in the list.  
+```
 
+---
 
-## Feature XYZ
+## 📝 Adding todos
 
-// Feature details
+Use this when you want to add a task without a deadline.
+
+**Example:**
+
+```
+todo Buy groceries
+```
+
+**Expected outcome:**
+
+```
+Got it. I've added this task:  
+  [T][ ] Buy groceries  
+Now you have 2 tasks in the list.  
+```
+
+---
+
+## ✅ Marking tasks as done
+
+Once you finish a task, you can mark it as done.
+
+**Example:**
+
+```
+done 2
+```
+
+**Expected outcome:**
+
+```
+Nice! I've marked this task as done:  
+  [T][X] Buy groceries  
+```
+
+---
+
+## 📋 Listing tasks
+
+List all current tasks to see what’s pending and what’s completed.
+
+**Example:**
+
+```
+list
+```
+
+**Expected outcome:**
+
+```
+Here are the tasks in your list:  
+1. [D][ ] Submit report (by: Sep 20 2025)  
+2. [T][X] Buy groceries  
+```
+
+---
+
+## 🗑 Deleting tasks
+
+Remove tasks you no longer need.
+
+**Example:**
+
+```
+delete 1
+```
+
+**Expected outcome:**
+
+```
+Noted. I've removed this task:  
+  [D][ ] Submit report (by: Sep 20 2025)  
+Now you have 1 task in the list.  
+```
+
+---
+
+## 👋 Exiting Manbo
+
+Type the command below to quit the chatbot.
+
+**Example:**
+
+```
+bye
+```
+
+**Expected outcome:**
+
+```
+Bye. Hope to see you again soon!  
+```
+
+---
+
+## 🎯 Summary
+
+Manbo supports:
+
+* Adding deadlines
+* Adding todos
+* Marking tasks as done
+* Listing all tasks
+* Deleting tasks
+* Exiting the program
+
+Start using **Manbo** today and make your task management simple and fun! 🚀
+
+---
